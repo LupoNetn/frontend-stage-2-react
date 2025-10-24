@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import wave from "../assets/wave.svg";
+import wave from "../../assets/wave.svg";
 
 const Hero = () => {
   return (
@@ -22,7 +22,7 @@ const Hero = () => {
         {/* ===== BUTTONS ===== */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button className="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105">
-            Get Started
+           <Link to="/auth/signup"> Get Started </Link>
           </button>
            <button className="w-full sm:w-auto px-8 py-3 border border-indigo-400 text-indigo-400 rounded-lg hover:bg-indigo-950 transition-all duration-300">
            <a href="#how-we-work"> How We Work </a>

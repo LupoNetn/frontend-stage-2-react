@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[180px]" />{" "}
         <div className="absolute bottom-0 right-1/3 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[160px]" />{" "}
       </div>
-      ```
+     
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
         {/* logo + tagline */}
         <div className="text-center md:text-left">
@@ -28,16 +28,10 @@ const Footer = () => {
             Home
           </li>
           <li className="hover:text-cyan-400 transition-colors cursor-pointer">
-            Features
+           Services
           </li>
           <li className="hover:text-cyan-400 transition-colors cursor-pointer">
             How It Works
-          </li>
-          <li className="hover:text-cyan-400 transition-colors cursor-pointer">
-            Pricing
-          </li>
-          <li className="hover:text-cyan-400 transition-colors cursor-pointer">
-            Contact
           </li>
         </ul>
 

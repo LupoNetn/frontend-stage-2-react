@@ -1,18 +1,18 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
-import Hero from '../components/Hero'
-import Services from '../components/Services'
-import HowWeWork from '../components/HowWeWork'
-import Testimonials from '../components/Testimonials'
+import Hero from '../components/HomeComponents/Hero'
+import Services from '../components/HomeComponents/Services'
+import HowWeWork from '../components/HomeComponents/HowWeWork'
+import Testimonials from '../components/HomeComponents/Testimonials'
 
 const Home = () => {
   return (
     <section id="home">
 
-      {/* Navigation Menu! */}
+      {/* Navigation Menu!
       <div>
         <Navbar />
-      </div>
+      </div> */}
 
       {/* Hero Section */}
       <div>
