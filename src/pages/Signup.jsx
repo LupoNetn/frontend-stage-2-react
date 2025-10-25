@@ -1,11 +1,12 @@
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useState } from "react";
 import Spinner from "../components/Spinner";
 
 const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const {
     register,
@@ -14,19 +15,28 @@ const Signup = () => {
     reset,
   } = useForm();
 
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsAuthenticated(true);
+      navigate("/app");
+    }
+  }, [navigate]);
+
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const existingUser = localStorage.getItem('user')
-
+      const existingUser = localStorage.getItem("user");
       if (existingUser) {
         toast.error("A User already exists, please login to your account!");
         return;
       }
+
+      // Save user data
+      localStorage.setItem("user", JSON.stringify(data));
 
       toast.success("Account created successfully!");
       reset();
@@ -135,9 +145,16 @@ const Signup = () => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-linear-to-r from-cyan-500 to-indigo-600 rounded-lg font-semibold text-white hover:opacity-90 transition-all duration-300 hover:shadow-[0_0_25px_-5px_rgba(6,182,212,0.6)] hover:-translate-y-1"
+            disabled={isLoading || isAuthenticated}
+            className="w-full py-3 bg-linear-to-r from-cyan-500 to-indigo-600 rounded-lg font-semibold text-white hover:opacity-90 transition-all duration-300 hover:shadow-[0_0_50px_-15px_rgba(6,182,212,0.4)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
           >
-            {isLoading ? <Spinner /> : "Sign Up"}
+            {isLoading ? (
+              <Spinner />
+            ) : isAuthenticated ? (
+              "Already Logged In"
+            ) : (
+              "Sign Up"
+            )}
           </button>
         </form>
 

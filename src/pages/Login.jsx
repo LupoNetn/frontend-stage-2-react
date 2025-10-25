@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -12,7 +12,17 @@ const Login = () => {
     reset,
   } = useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+
+  // Check for existing token on component mount
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsAuthenticated(true);
+      navigate("/app");
+    }
+  }, [navigate]);
 
   const onSubmit = async (data) => {
     try {
@@ -37,15 +47,16 @@ const Login = () => {
         return;
       }
 
+      // Generate a simple token (in real apps, this would come from your backend)
+      const authToken = btoa(`${email}:${Date.now()}`);
+      localStorage.setItem("authToken", authToken);
+
       toast.success("Logged in successfully!");
       reset();
-      navigate("/");
-      setIsLoading(false);
+      navigate("/app");
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong!");
-      reset();
-      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -129,11 +140,16 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-linear-to-r from-cyan-500 to-indigo-600 rounded-lg font-semibold text-white hover:opacity-90 transition-all duration-300 hover:shadow-[0_0_25px_-5px_rgba(6,182,212,0.6)] hover:-translate-y-1"
+            disabled={isLoading || isAuthenticated}
+            className="w-full py-3 bg-linear-to-r from-cyan-500 to-indigo-600 rounded-lg font-semibold text-white hover:opacity-90 transition-all duration-300 hover:shadow-[0_0_50px_-15px_rgba(6,182,212,0.4)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
           >
-           {isLoading ? (
-            <Spinner />
-           ) : "Log In"}
+            {isLoading ? (
+              <Spinner />
+            ) : isAuthenticated ? (
+              "Already Logged In"
+            ) : (
+              "Log In"
+            )}
           </button>
         </form>
 
