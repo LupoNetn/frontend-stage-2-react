@@ -67,7 +67,7 @@ const Footer = () => {
       <div className="mt-12 text-center text-xs text-gray-500">
         <p>
           © {new Date().getFullYear()} Ticketr. All rights reserved.{" "}
-          <span className="text-cyan-400">Built with passion by Lupo.</span>
+          <span className="text-cyan-400">Built with by Lupo.</span>
         </p>
       </div>
     </footer>
