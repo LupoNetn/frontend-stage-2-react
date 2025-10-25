@@ -1,9 +1,58 @@
-import React from "react";
-import { Link } from "react-router";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+import Spinner from "../components/Spinner";
 
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    try {
+      setIsLoading(true);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const { email, password } = data;
+
+      const existingUser = JSON.parse(localStorage.getItem("user"));
+
+      if (!existingUser) {
+        toast.error("No account found, please sign up first!");
+        return;
+      }
+
+      if (
+        existingUser &&
+        (existingUser.email !== email || existingUser.password !== password)
+      ) {
+        toast.error("Invalid email or password!");
+        return;
+      }
+
+      toast.success("Logged in successfully!");
+      reset();
+      navigate("/");
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
+      reset();
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <section className="pt-20 lg:pt-0 relative min-h-screen bg-linear-to-b from-black via-gray-950 to-black flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8">
+    <section className="pt-20 relative min-h-screen bg-linear-to-b from-black via-gray-950 to-black flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8">
       {/* glowing background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-24 left-10 sm:left-28 w-64 sm:w-96 h-64 sm:h-96 bg-cyan-500/15 rounded-full blur-[160px]" />
@@ -22,7 +71,10 @@ const Login = () => {
         </div>
 
         {/* form */}
-        <form className="space-y-4 sm:space-y-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4 sm:space-y-6"
+        >
           <div>
             <label
               htmlFor="email"
@@ -31,11 +83,23 @@ const Login = () => {
               Email Address
             </label>
             <input
+              {...register("email", {
+                required: "Email is Required",
+                pattern: {
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                },
+              })}
               type="email"
               id="email"
               placeholder="you@example.com"
               className="w-full px-4 py-3 rounded-lg bg-gray-800/60 text-white border border-gray-700 focus:outline-none focus:border-cyan-400 transition-all duration-300 placeholder-gray-500"
             />
+            {errors.email && (
+              <p className="text-sm text-red-600">{errors.email.message}</p>
+            )}
           </div>
 
           <div>
@@ -46,37 +110,35 @@ const Login = () => {
               Password
             </label>
             <input
+              {...register("password", {
+                required: "Password is Required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters long",
+                },
+              })}
               type="password"
               id="password"
               placeholder="••••••••"
               className="w-full px-4 py-3 rounded-lg bg-gray-800/60 text-white border border-gray-700 focus:outline-none focus:border-cyan-400 transition-all duration-300 placeholder-gray-500"
             />
-          </div>
-
-          <div className="flex items-center justify-between text-sm text-gray-400">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="remember"
-                className="w-4 h-4 text-cyan-500 border-gray-700 rounded focus:ring-cyan-400"
-              />
-              <label htmlFor="remember">Remember me</label>
-            </div>
-            <span className="text-cyan-400 hover:text-cyan-300 cursor-pointer">
-              Forgot password?
-            </span>
+            {errors.password && (
+              <p className="text-sm text-red-600">{errors.password.message}</p>
+            )}
           </div>
 
           <button
             type="submit"
             className="w-full py-3 bg-linear-to-r from-cyan-500 to-indigo-600 rounded-lg font-semibold text-white hover:opacity-90 transition-all duration-300 hover:shadow-[0_0_25px_-5px_rgba(6,182,212,0.6)] hover:-translate-y-1"
           >
-            Log In
+           {isLoading ? (
+            <Spinner />
+           ) : "Log In"}
           </button>
         </form>
 
         {/* bottom text */}
-        <Link to='/auth/signup'>
+        <Link to="/auth/signup">
           <p className="text-gray-500 text-center text-xs sm:text-sm mt-6 sm:mt-8">
             Don't have an account?{" "}
             <span className="text-cyan-400 hover:text-cyan-300 cursor-pointer">

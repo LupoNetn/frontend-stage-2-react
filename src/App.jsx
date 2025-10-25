@@ -7,6 +7,7 @@ import ProtectedLayout from './components/ProtectedLayout';
 import Dashboard from './pages/Dashboard';
 import Tickets from './pages/Tickets';
 import TicketsDetail from './pages/TicketsDetail';
+import { Toaster } from 'sonner';
 
 const App = () => {
   const router = createBrowserRouter([
@@ -32,7 +33,10 @@ const App = () => {
   ]);
 
   return (
-    <RouterProvider router={router} />
+   <>
+     <Toaster position="top-center" richColors />
+     <RouterProvider router={router} />
+   </>
   );
 };
 
